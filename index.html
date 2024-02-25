@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-do List</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    #todo-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #todo-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #dee2e6;
+      transition: background-color 0.3s ease;
+    }
+
+    .task-text {
+      flex: 1;
+      text-align: left;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .delete-btn,
+    .update-btn,
+    .cancel-btn {
+      background-color: #e44d26;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .delete-btn:hover,
+    .update-btn:hover,
+    .cancel-btn:hover {
+      background-color: #c04126;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      width: 60%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+    }
+
+    #add-btn {
+      padding: 8px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    #add-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="todo-container">
+    <h2>To-do List</h2>
+    <ul id="todo-list"></ul>
+    <div>
+      <input type="text" id="new-task" placeholder="New task...">
+      <button id="add-btn">Add</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const todoList = document.getElementById('todo-list');
+      const newTaskInput = document.getElementById('new-task');
+      const addBtn = document.getElementById('add-btn');
+
+      addBtn.addEventListener('click', async function () {
+        const taskText = newTaskInput.value.trim();
+
+        if (taskText !== '') {
+          const li = createTaskElement(taskText);
+          todoList.appendChild(li);
+          newTaskInput.value = '';
+        }
+      });
+
+      function createTaskElement(taskText) {
+        const li = document.createElement('li');
+        li.className = 'todo-item';
+
+        const taskTextSpan = document.createElement('span');
+        taskTextSpan.className = 'task-text';
+        taskTextSpan.textContent = taskText;
+
+        const updateBtn = document.createElement('button');
+        updateBtn.className = 'update-btn';
+        updateBtn.textContent = 'Update';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Delete';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'cancel-btn';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.style.display = 'none';
+
+        li.appendChild(taskTextSpan);
+        li.appendChild(updateBtn);
+        li.appendChild(deleteBtn);
+        li.appendChild(cancelBtn);
+
+        deleteBtn.addEventListener('click', function () {
+          li.remove();
+        });
+
+        updateBtn.addEventListener('click', function () {
+          const updatedText = newTaskInput.value.trim();
+
+          if (updatedText !== '') {
+            taskTextSpan.textContent = updatedText;
+            newTaskInput.value = '';
+            cancelBtn.click();  // Simulate a click on Cancel to reset the UI
+          }
+        });
+
+        taskTextSpan.addEventListener('click', function () {
+          newTaskInput.value = taskTextSpan.textContent;
+          updateBtn.style.display = 'inline-block';
+          cancelBtn.style.display = 'inline-block';
+        });
+
+        cancelBtn.addEventListener('click', function () {
+          updateBtn.style.display = 'none';
+          cancelBtn.style.display = 'none';
+        });
+
+        return li;
+      }
+    });
+  </script>
+
+</body>
+</html>
